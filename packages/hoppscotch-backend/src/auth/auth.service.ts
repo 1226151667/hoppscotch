@@ -387,6 +387,16 @@ export class AuthService {
   }
 
   getAuthProviders() {
-    return this.infraConfigService.getAllowedAuthProviders();
+    const providers = this.infraConfigService.getAllowedAuthProviders();
+
+    return providers.map((provider) => {
+      if (provider === 'OIDC') {
+        const providerName =
+          this.configService.get<string>('INFRA.OIDC_PROVIDER_NAME') ||
+          'openid';
+        return `OIDC:${providerName}`;
+      }
+      return provider;
+    });
   }
 }

@@ -328,6 +328,18 @@ export class InfraConfigService implements OnModuleInit, OnModuleDestroy {
           configMap.MICROSOFT_SCOPE &&
           configMap.MICROSOFT_TENANT
         );
+      case AuthProvider.OIDC:
+        return (
+          configMap.OIDC_PROVIDER_NAME &&
+          configMap.OIDC_ISSUER &&
+          configMap.OIDC_AUTH_URL &&
+          configMap.OIDC_TOKEN_URL &&
+          configMap.OIDC_USER_INFO_URL &&
+          configMap.OIDC_CLIENT_ID &&
+          configMap.OIDC_CLIENT_SECRET &&
+          configMap.OIDC_CALLBACK_URL &&
+          configMap.OIDC_SCOPE
+        );
       case AuthProvider.EMAIL:
         if (configMap.MAILER_SMTP_ENABLE !== 'true') return false;
         if (configMap.MAILER_USE_CUSTOM_CONFIGS === 'true') {
@@ -811,9 +823,21 @@ export class InfraConfigService implements OnModuleInit, OnModuleDestroy {
           if (!value) return fail();
           break;
 
+        case InfraConfigEnum.OIDC_CLIENT_ID:
+        case InfraConfigEnum.OIDC_CLIENT_SECRET:
+        case InfraConfigEnum.OIDC_SCOPE:
+        case InfraConfigEnum.OIDC_ISSUER:
+        case InfraConfigEnum.OIDC_AUTH_URL:
+        case InfraConfigEnum.OIDC_TOKEN_URL:
+        case InfraConfigEnum.OIDC_USER_INFO_URL:
+        case InfraConfigEnum.OIDC_PROVIDER_NAME:
+          if (!value) return fail();
+          break;
+
         case InfraConfigEnum.GOOGLE_CALLBACK_URL:
         case InfraConfigEnum.GITHUB_CALLBACK_URL:
         case InfraConfigEnum.MICROSOFT_CALLBACK_URL:
+        case InfraConfigEnum.OIDC_CALLBACK_URL:
         case InfraConfigEnum.PROXY_APP_URL:
           if (!validateUrl(value)) return fail();
           break;

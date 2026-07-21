@@ -4,6 +4,7 @@ import { BehaviorSubject, Subject } from "rxjs"
 import { Ref, ref, watch } from "vue"
 
 import { getService } from "@hoppscotch/common/modules/dioc"
+import { getI18n } from "@hoppscotch/common/modules/i18n"
 import {
   AuthEvent,
   AuthPlatformDef,
@@ -11,6 +12,7 @@ import {
 } from "@hoppscotch/common/platform/auth"
 import { PersistenceService } from "@hoppscotch/common/services/persistence"
 
+import IconOpenId from "~icons/auth/openid"
 import { getAllowedAuthProviders, updateUserDisplayName } from "./api"
 
 export const authEvents$ = new Subject<AuthEvent | { event: "token_refresh" }>()
@@ -378,6 +380,18 @@ export const def: AuthPlatformDef = {
    * Verifies if the current user's authentication tokens are valid
    * @returns True if tokens are valid, false otherwise
    */
+  additionalLoginItems: [
+    {
+      id: "OIDC",
+      icon: IconOpenId,
+      text: (t) =>
+        t("auth.continue_with_auth_provider", { provider: "OpenID Connect" }),
+      onClick: async () => {
+        window.location.href = `${import.meta.env.VITE_BACKEND_API_URL}/auth/oidc`
+      },
+    },
+  ],
+
   async verifyAuthTokens() {
     try {
       const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL

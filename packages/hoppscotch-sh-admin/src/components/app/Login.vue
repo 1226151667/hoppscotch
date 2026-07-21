@@ -45,6 +45,17 @@
           :label="t('state.continue_microsoft')"
           @click="signInWithMicrosoft"
         />
+        <template
+          v-for="provider in oidcProviders"
+          :key="provider.name"
+        >
+          <HoppSmartItem
+            :loading="signingInWithOidc"
+            :icon="IconOpenId"
+            :label="provider.label"
+            @click="signInWithOidc"
+          />
+        </template>
         <HoppSmartItem
           v-if="allowedAuthProviders.includes('EMAIL')"
           :icon="IconEmail"
@@ -164,7 +175,7 @@
 
 <script setup lang="ts">
 import { computedAsync } from '@vueuse/core';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from '~/composables/i18n';
 import { useToast } from '~/composables/toast';
 import { auth } from '~/helpers/auth';
@@ -173,6 +184,7 @@ import IconEmail from '~icons/auth/email';
 import IconGithub from '~icons/auth/github';
 import IconGoogle from '~icons/auth/google';
 import IconMicrosoft from '~icons/auth/microsoft';
+import IconOpenId from '~icons/auth/openid';
 import IconArrowLeft from '~icons/lucide/arrow-left';
 import IconFileText from '~icons/lucide/file-text';
 
@@ -190,6 +202,7 @@ const error = ref(false);
 const signingInWithGoogle = ref(false);
 const signingInWithGitHub = ref(false);
 const signingInWithMicrosoft = ref(false);
+const signingInWithOidc = ref(false);
 const signingInWithEmail = ref(false);
 const mode = ref('sign-in');
 const nonAdminUser = ref(false);
@@ -276,6 +289,32 @@ const getAllowedAuthProviders = async () => {
   } finally {
     fetching.value = false;
   }
+};
+
+// Compute OIDC providers from allowedAuthProviders (format: "OIDC:providerName")
+const oidcProviders = computed(() => {
+  return allowedAuthProviders.value
+    .filter((p: string) => p.startsWith('OIDC'))
+    .map((p: string) => {
+      const name = p.includes(':') ? p.split(':').slice(1).join(':') : 'OpenID Connect';
+      return {
+        name,
+        label: t('state.continue_oidc', { provider: name }),
+      };
+    });
+});
+
+const signInWithOidc = () => {
+  signingInWithOidc.value = true;
+
+  try {
+    auth.signInUserWithOidc();
+  } catch (e) {
+    console.error(e);
+    toast.error(t('state.oidc_signin_failure'));
+  }
+
+  signingInWithOidc.value = false;
 };
 
 const logout = async () => {

@@ -131,27 +131,53 @@ const providerConfigFields = <ProviderFieldMetadata[]>[
   {
     name: t('configs.auth_providers.client_id'),
     key: 'client_id',
-    applicableProviders: ['google', 'github', 'microsoft'],
+    applicableProviders: ['google', 'github', 'microsoft', 'oidc'],
   },
   {
     name: t('configs.auth_providers.client_secret'),
     key: 'client_secret',
-    applicableProviders: ['google', 'github', 'microsoft'],
+    applicableProviders: ['google', 'github', 'microsoft', 'oidc'],
   },
   {
     name: t('configs.auth_providers.callback_url'),
     key: 'callback_url',
-    applicableProviders: ['google', 'github', 'microsoft'],
+    applicableProviders: ['google', 'github', 'microsoft', 'oidc'],
   },
   {
     name: t('configs.auth_providers.scope'),
     key: 'scope',
-    applicableProviders: ['google', 'github', 'microsoft'],
+    applicableProviders: ['google', 'github', 'microsoft', 'oidc'],
   },
   {
     name: t('configs.auth_providers.tenant'),
     key: 'tenant',
     applicableProviders: ['microsoft'],
+  },
+  // OIDC-specific fields
+  {
+    name: t('configs.auth_providers.issuer'),
+    key: 'issuer',
+    applicableProviders: ['oidc'],
+  },
+  {
+    name: t('configs.auth_providers.authorization_url'),
+    key: 'authorization_url',
+    applicableProviders: ['oidc'],
+  },
+  {
+    name: t('configs.auth_providers.token_url'),
+    key: 'token_url',
+    applicableProviders: ['oidc'],
+  },
+  {
+    name: t('configs.auth_providers.user_info_url'),
+    key: 'user_info_url',
+    applicableProviders: ['oidc'],
+  },
+  {
+    name: t('configs.auth_providers.provider_name'),
+    key: 'provider_name',
+    applicableProviders: ['oidc'],
   },
 ];
 
@@ -174,6 +200,17 @@ const maskState = reactive<Record<SsoAuthProviders, ProviderFields>>({
     callback_url: true,
     scope: true,
     tenant: true,
+  },
+  oidc: {
+    client_id: true,
+    client_secret: true,
+    callback_url: true,
+    scope: true,
+    issuer: true,
+    authorization_url: true,
+    token_url: true,
+    user_info_url: true,
+    provider_name: true,
   },
 });
 

@@ -1,7 +1,7 @@
 import { inject, provide, ref, type InjectionKey, type Ref } from 'vue';
 import { InfraConfigEnum } from './backend/graphql';
 
-export type SsoAuthProviders = 'google' | 'microsoft' | 'github';
+export type SsoAuthProviders = 'google' | 'microsoft' | 'github' | 'oidc';
 
 export type ServerConfigs = {
   providers: {
@@ -34,6 +34,21 @@ export type ServerConfigs = {
         callback_url: string;
         scope: string;
         tenant: string;
+      };
+    };
+    oidc: {
+      name: SsoAuthProviders;
+      enabled: boolean;
+      fields: {
+        client_id: string;
+        client_secret: string;
+        callback_url: string;
+        scope: string;
+        issuer: string;
+        authorization_url: string;
+        token_url: string;
+        user_info_url: string;
+        provider_name: string;
       };
     };
   };
@@ -193,6 +208,45 @@ export const GITHUB_CONFIGS: Config[] = [
   {
     name: InfraConfigEnum.GithubScope,
     key: 'scope',
+  },
+];
+
+export const OIDC_CONFIGS: Config[] = [
+  {
+    name: InfraConfigEnum.OidcClientId,
+    key: 'client_id',
+  },
+  {
+    name: InfraConfigEnum.OidcClientSecret,
+    key: 'client_secret',
+  },
+  {
+    name: InfraConfigEnum.OidcCallbackUrl,
+    key: 'callback_url',
+  },
+  {
+    name: InfraConfigEnum.OidcScope,
+    key: 'scope',
+  },
+  {
+    name: InfraConfigEnum.OidcIssuer,
+    key: 'issuer',
+  },
+  {
+    name: InfraConfigEnum.OidcAuthUrl,
+    key: 'authorization_url',
+  },
+  {
+    name: InfraConfigEnum.OidcTokenUrl,
+    key: 'token_url',
+  },
+  {
+    name: InfraConfigEnum.OidcUserInfoUrl,
+    key: 'user_info_url',
+  },
+  {
+    name: InfraConfigEnum.OidcProviderName,
+    key: 'provider_name',
   },
 ];
 
@@ -359,6 +413,7 @@ export const ALL_CONFIGS = [
   GOOGLE_CONFIGS,
   MICROSOFT_CONFIGS,
   GITHUB_CONFIGS,
+  OIDC_CONFIGS,
   MAIL_CONFIGS,
   CUSTOM_MAIL_CONFIGS,
   DATA_SHARING_CONFIGS,
@@ -453,6 +508,7 @@ const PROVIDER_CONFIGS: Record<SsoAuthProviders, Config[]> = {
   google: GOOGLE_CONFIGS,
   github: GITHUB_CONFIGS,
   microsoft: MICROSOFT_CONFIGS,
+  oidc: OIDC_CONFIGS,
 };
 
 export const getConfigValidationIssues = (
