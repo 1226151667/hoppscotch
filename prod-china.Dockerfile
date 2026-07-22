@@ -1,7 +1,7 @@
 # =============================================================================
 # prod-china.Dockerfile
 # 基于 prod.Dockerfile，针对中国内地网络环境优化：
-#   - Alpine 源 → 清华镜像
+#   - Alpine 源 → mirrors.aliyun.com
 #   - Go 下载 → mirrors.aliyun.com/golang
 #   - Go module → goproxy.cn
 #   - GitHub 下载 → ghproxy.net
@@ -14,7 +14,7 @@
 FROM alpine:3.24.1 AS go_builder
 
 # 国内镜像：Alpine 源
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk add --no-cache curl git openssh-client
 
 ARG TARGETARCH
@@ -83,7 +83,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o webapp-server .
 FROM alpine:3.24.1 AS node_base
 
 # 国内镜像：Alpine 源
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 # Install dependencies
 RUN apk upgrade --no-cache && \
