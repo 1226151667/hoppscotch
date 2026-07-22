@@ -152,11 +152,8 @@ WORKDIR /usr/src/app
 ENV HOPP_ALLOW_RUNTIME_ENV=true
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 
-COPY pnpm-lock.yaml .
-RUN pnpm fetch
-
 COPY . .
-RUN pnpm install -f --prefer-offline
+RUN pnpm install -f
 
 
 
