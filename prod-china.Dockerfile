@@ -151,6 +151,8 @@ RUN apk add --no-cache python3 make g++ git openssh-client zlib-dev brotli-dev c
 WORKDIR /usr/src/app
 ENV HOPP_ALLOW_RUNTIME_ENV=true
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+# 禁用 io_uring：Node.js 22 默认使用 io_uring 做文件 I/O，但 Docker seccomp 默认禁用了 io_uring 系统调用，在部分内核上会返回 EPERM
+ENV UV_USE_IO_URING=0
 
 COPY pnpm-lock.yaml .
 # 显式指定 store 目录到 /tmp，避免 /root/.local 下的 EPERM 问题
