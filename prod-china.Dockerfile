@@ -153,6 +153,8 @@ ENV HOPP_ALLOW_RUNTIME_ENV=true
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 
 COPY pnpm-lock.yaml .
+# 旧版 Docker builder 在特定环境下硬链接会报 EPERM，用 copy 规避（构建中间层多占几 GB，最终镜像大小不变）
+RUN pnpm config set package-import-method copy
 RUN pnpm fetch
 
 COPY . .
