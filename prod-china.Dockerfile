@@ -156,6 +156,9 @@ COPY pnpm-lock.yaml .
 RUN pnpm fetch
 
 COPY . .
+# 官方 CI 在构建前会 cp .env.example .env，Dockerfile 内没有这步会导致 vite.config.ts 的
+# loadEnv() 加载不到 VITE_BASE_URL，vite-plugin-pages-sitemap 收到 undefined 后调用 endsWith() 崩溃
+RUN cp .env.example .env
 RUN pnpm install -f --prefer-offline
 
 
