@@ -167,6 +167,8 @@ FROM base_builder AS backend_builder
 
 WORKDIR /usr/src/app/packages/hoppscotch-backend
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+# Git SSH → HTTPS，避免 pnpm deploy 拉取 git-hosted 依赖时 Host key verification 失败
+RUN git config --global url."https://github.com/".insteadOf "git@github.com:"
 RUN pnpm exec prisma generate
 RUN pnpm run build
 RUN pnpm --filter=hoppscotch-backend deploy /dist/backend --prod --legacy
