@@ -125,3 +125,22 @@ private findExampleByIdOrName(
 **影响范围**: 仅特定环境（老内核 + 老 Docker），Ubuntu 22.04 / Docker Desktop 不受影响。
 
 **临时方案**: 在非 CentOS 7 的机器上构建镜像。
+
+---
+
+## 6. Body 参数（urlencoded / form-data）缺少 Description 列
+
+**Issue**: [#6547](https://github.com/hoppscotch/hoppscotch/issues/6547) | **讨论**: [Discussion #1971](https://github.com/hoppscotch/hoppscotch/discussions/1971)
+
+**现象**: Postman 在 `application/x-www-form-urlencoded` 和 `multipart/form-data` 模式下都提供了 Description 列，方便给每个参数添加备注说明。Hoppscotch 在 v2024.8.0 已为 URL Query Parameters 增加了 Description 列，但 Body 参数（urlencoded、form-data）至今没有。
+
+**对比**:
+
+| 参数位置 | Postman | Hoppscotch |
+|---|---|---|
+| Query Parameters | ✅ Description 列 | ✅ v2024.8.0 已支持 |
+| Headers | ✅ Description 列 | ✅ 一直支持 |
+| Body — urlencoded | ✅ Description 列 | ❌ 缺失 |
+| Body — form-data | ✅ Description 列 | ❌ 缺失 |
+
+**官方状态**: 维护者在 Discussion #1971 中已标记"Description field on parameters are now available"并关闭讨论，但 Body 参数的缺失未被回应。已于 2026-07-29 提交独立 feature request #6547。
